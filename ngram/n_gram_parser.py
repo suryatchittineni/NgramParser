@@ -1,7 +1,7 @@
 from collections import defaultdict
 import re
-from typing import OrderedDict
 from fastapi.params import File
+from fastapi import status, HTTPException
 
 
 class NGramParser:
@@ -23,20 +23,40 @@ class NGramParser:
     """
 
     def get_frequency_and_predictions(self) -> dict:
-        self.run()
-        return {"Frequencies": self.frequency_map, "Predictions": self.prediction_map}
+        try:
+            self.run()
+            return {"Frequencies": self.frequency_map, "Predictions": self.prediction_map}
+        except Exception as e:
+            print(e) # In a real world scenario we will be logging here so that we can track these errors
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail= {
+                    "msg": "Something went wrong while getting frequencies and predictions.",
+                    "additional details": e.args
+                }
+            )
 
     """
     This method will returns the number of occurances of a given text.
     """
 
     def get_frequency_of_text(self, text: str) -> dict:
-        self.run()
-        result = {f"Frequency of [{text.lower()}]": 0}
-        if text.lower() in self.frequency_map:
-            result[f"Frequency of [{text.lower()}]"] = self.frequency_map[text.lower()]
-        return result
-
+        try:
+            self.run()
+            result = {f"Frequency of [{text.lower()}]": 0}
+            if text.lower() in self.frequency_map:
+                result[f"Frequency of [{text.lower()}]"] = self.frequency_map[text.lower()]
+            return result
+        except Exception as e:
+            print(e) # In a real world scenario we will be logging here so that we can track these errors
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail= {
+                    "msg": "Something went wrong while getting frequency of text.",
+                    "additional details": e.args
+                }
+            )
+        
     """
     This method will get x number of predictions based on highest number of occurances.
     1. If all the words have same occurances we will just choose top x items from the list.
@@ -44,18 +64,28 @@ class NGramParser:
     """
 
     def get_predictions(self, x: int, text: str) -> dict:
-        self.run()
-        result = {f"candidate completions for [{text.lower()}]": {}}
-        if text.lower() in self.prediction_map:
-            next_words_set = set(self.prediction_map[text.lower()])
-            next_words = self.prediction_map[text.lower()]
-            predictions = {}
-            for item in next_words_set:
-                predictions[item] = next_words.count(item)
-            predictions = sorted(predictions.items(), key=lambda x: x[1], reverse=True)
-            predictions = predictions[:x] if x < len(predictions) else predictions
-            result[f"candidate completions for [{text.lower()}]"] = dict(predictions)
-        return result
+        try:
+            self.run()
+            result = {f"candidate completions for [{text.lower()}]": {}}
+            if text.lower() in self.prediction_map:
+                next_words_set = set(self.prediction_map[text.lower()])
+                next_words = self.prediction_map[text.lower()]
+                predictions = {}
+                for item in next_words_set:
+                    predictions[item] = next_words.count(item)
+                predictions = sorted(predictions.items(), key=lambda x: x[1], reverse=True)
+                predictions = predictions[:x] if x < len(predictions) else predictions
+                result[f"candidate completions for [{text.lower()}]"] = dict(predictions)
+            return result
+        except Exception as e:
+            print(e) # In a real world scenario we will be logging here so that we can track these errors
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail= {
+                    "msg": "Something went wrong while getting predictions of text.",
+                    "additional details": e.args
+                }
+            )
 
     """
     This method is just orchestrating the flow of data.
