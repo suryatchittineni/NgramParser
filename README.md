@@ -15,3 +15,9 @@ Parse a file and return word frequencies, predict the patterns.
 
 5. Run the app
     `uvicorn main:app --reload`
+
+6. Install pytest
+    `pip install -U pytest`
+
+7. Run tests
+    `pytest`
