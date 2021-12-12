@@ -14,7 +14,7 @@ class NGramParser:
     def __init__(self, n: int, file: File):
         self.n = n
         self.file = file
-        self.frequency_map = defaultdict(lambda:1)
+        self.frequency_map = defaultdict(lambda:0)
         self.words = []
         self.prediction_map = defaultdict(list)
     
@@ -77,7 +77,7 @@ class NGramParser:
         for line in file_content:
             content = line.decode("utf-8")
             content = content.replace("\r\n", "")
-            self.words.extend(re.split(r"[ \.,!\[\]:#-*]", content))
+            self.words.extend(re.split(r"[ \.,!\[\]:#*”“(){}?\-_\+<>^$%@~;\|]", content))
         while "" in self.words:
             self.words.remove("")
     
