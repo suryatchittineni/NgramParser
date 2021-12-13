@@ -10,21 +10,9 @@ Parse a file and return word frequencies, predict the patterns.
         
             source .venv/bin/activate
 
-    3. Install fastapi
+    3. Install dependencies
     
-            pip install fastapi
-
-    4. Install uvicorn
-    
-            pip install "uvicorn[standard]"
-
-    5. Install pytest
-    
-            pip install -U pytest
-        
-    6. Install magic mock
-        
-            pip install pytest-mock
+            pip install -r requirements.txt
 
 * Run
     1. Run the app
@@ -33,6 +21,4 @@ Parse a file and return word frequencies, predict the patterns.
 
     3. Run tests
         
-            pytest
-
             pytest -vv
