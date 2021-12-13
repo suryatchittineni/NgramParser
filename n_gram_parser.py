@@ -102,7 +102,6 @@ class NGramParser:
 
     def parse_data(self):
         file_content = self.file.file.readlines()
-        print(file_content)
         for line in file_content:
             content = line.decode("utf-8")
             content = content.replace("\r\n", "")
