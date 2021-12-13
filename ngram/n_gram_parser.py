@@ -106,7 +106,7 @@ class NGramParser:
             content = line.decode("utf-8")
             content = content.replace("\r\n", "")
             self.words.extend(
-                re.split(r"[ \.,!\[\]:#*”“(){}?\-_\+<>^$%@~;\|]", content)
+                re.split("[^a-zA-Z0-9’']+", content)
             )
         while "" in self.words:
             self.words.remove("")
@@ -120,8 +120,10 @@ class NGramParser:
     def frequency_collector(self):
         start_index = 0
         end_index = self.n
-        while len(self.words) >= self.n:
+        while len(self.words) > 0:
             current_words = []
+            if len(self.words) < self.n:
+                end_index = len(self.words)
             for i in range(start_index, end_index):
                 current_words.append(self.words[i].lower())
                 current_string = " ".join(current_words)
