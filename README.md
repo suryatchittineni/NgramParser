@@ -22,3 +22,9 @@ Parse a file and return word frequencies, predict the patterns.
     3. Run tests
         
             pytest -vv
+
+* Once the application is running, you can load the `Swagger UI documentation` going to this url
+        
+        http://localhost:8000/docs
+
+* For best experience use `POSTMAN` to make the calls, some endpoints return lot of data and Swagger UI can't handle it.
